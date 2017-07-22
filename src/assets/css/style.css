@@ -3,6 +3,7 @@ body { font-family: Roboto, Arial, sans-serif; }
 
 .appOverview { margin-top:40vh; }
 .appOverview button { font-size: 3em; padding: .4em 1.5em; }
+.appOverview .localIp { font-size: 3em; text-align: center; margin-top:1em; }
 
 .viewClose { position: absolute; bottom:0; right: 0; }
 
@@ -21,7 +22,7 @@ body { font-family: Roboto, Arial, sans-serif; }
 .controllroom button.active { background: red; color:#fff; }
 
 
-.controllroom .currentValues { width: 100%; border:1px solid green; height: 12vh; overflow: hidden; }
+.controllroom .currentValues { width: 100%; border:1px solid green; min-height: 12vh; }
 .controllroom .currentValues>div { position: relative; height: 10vh; display: inline-block; width: 10vh; background: #f0f0f0; margin:1vh; text-align: center; line-height: 10vh; font-size: 2em; }
 .controllroom button.removeButton { position: absolute; top: -10%; right: -10%; background: #999; padding: 2%; font-size: 45%; line-height: 45%; border: 0; width: 45%; height: 45%; color: #fff }
 

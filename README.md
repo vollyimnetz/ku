@@ -4,7 +4,7 @@
 
 * Rename `local.db.json.example` to `local.db.json`;
 * Run `npm install`
-* Run `npm run run`
+* Run `npm start`
 
 ## Build Setup
 

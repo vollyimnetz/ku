@@ -7,6 +7,7 @@
       <button type="button" class="btn btn-primary btn-lg" @click="setView('monitor')">zum Monitor</button>
       <div class="localIp">
         Lokale IP : <span v-if="localIp!==''">{{localIp}}</span><span v-if="localIp===''">{{localIp}}</span>
+        <br /><small>(Im Tablet aufrufen.)</small>
       </div>
     </div>
 
@@ -45,12 +46,15 @@ export default {
     getLocalIp: function() {
       var that = this;
       $.ajax({
-        type:'GET',
-        url: this.getTargetServer()+'my-local-ip',
-        success:function(response) {
+          type:'GET',
+          url: this.getTargetServer()+'my-local-ip',
+        })
+        .done(function(response) {
           that.localIp = response.result;
-        }
-      })
+        })
+        .fail(function() {
+          that.localIp = '127.0.0.1';
+        })
     }
   }
 }

@@ -1,24 +1,20 @@
 <template>
   <div class="controllroom">
+    <h2 class="container-fluid info1">Zahl auswählen die auf dem Monitor erscheinen soll.</h2>
     <div class="numberpad">
-      <button type="button" v-for="i in allowedValues" @click="addToCurrent(i)" :class="{'active':isActive(i)}">{{i.id}}</button>
+      <button type="button" v-for="i in allowedValues" :key="i.id" @click="addToCurrent(i)" :class="{'active':isActive(i)}">{{i.id}}</button>
     </div>
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-xs-12">
-
-          <h2>Bitte abholen</h2>
-          <div class="currentValues">
-            <div v-for="i in currentValues">
-              <button type="button" class="removeButton" @click="removeFromCurrent(i)">&times;</button>
-              {{i.id}}
-            </div>
-          </div>
+    <div class="container-fluid currentValuesWrap">
+      <h2 class="info2">Zahlen entfernen sobald die Speisen abgeholt wurden.</h2>
+      <div class="currentValues">
+        <div v-for="i in currentValues" :key="i.id">
+          <button type="button" class="removeButton" @click="removeFromCurrent(i)">&times;</button>
+          {{i.id}}
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary btn-lg viewClose" @click="doClose">Schließen</button>
+    <button type="button" class="btn btn-primary btn-lg viewClose" @click="doClose">Zur Übersicht</button>
   </div>
 </template>
 

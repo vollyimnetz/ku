@@ -41,7 +41,7 @@ export default {
     exitFullscreen:function() {
       if(document.exitFullscreen) document.exitFullscreen();
       else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-      else if(document.mozExitFullscreen) document.mozExitFullscreen();
+      else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
     },
     doClose:function() {
       this.exitFullscreen();

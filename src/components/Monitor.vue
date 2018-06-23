@@ -10,7 +10,7 @@
         </h1>
       </div>
     </transition>
-    <button type="button" class="btn btn-primary btn-lg viewClose" @click="doClose">Schließen</button>
+    <button type="button" class="btn btn-primary btn-lg viewClose" @click="doClose">&times;</button>
   </div>
 </template>
 
@@ -26,13 +26,25 @@ export default {
   },
   mounted: function () {
     this.refresh();
+    this.doFullscreen();
   },
   beforeDestroy: function() {
     console.log('clearTimeout monitor');
     if(this.refreshTimeout) clearTimeout(this.refreshTimeout);
   },
   methods: {
+    doFullscreen:function() {
+      if(document.body.parentElement.requestFullScreen) document.body.parentElement.requestFullScreen();
+      else if(document.body.parentElement.webkitRequestFullScreen) document.body.parentElement.webkitRequestFullScreen();
+      else if(document.body.parentElement.mozRequestFullScreen) document.body.parentElement.mozRequestFullScreen();
+    },
+    exitFullscreen:function() {
+      if(document.exitFullscreen) document.exitFullscreen();
+      else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if(document.mozExitFullscreen) document.mozExitFullscreen();
+    },
     doClose:function() {
+      this.exitFullscreen();
       this.$emit('close');
     },
     refresh: function() {

@@ -30,3 +30,7 @@ server.use(router)
 server.listen(80, () => {
   console.log('JSON Server is running')
 })
+
+
+const opn = require('opn');
+opn('http://localhost');

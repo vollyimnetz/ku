@@ -10,12 +10,19 @@
         </h1>
       </div>
     </transition>
-    <button type="button" class="btn btn-primary btn-lg viewClose" @click="doClose">&times;</button>
+    
+    <div class="topMenu">
+      <a class="btn btn-primary btn-lg" @click="toggleFullscreen()"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></a>
+      <router-link :to="{ name: 'home' }" class="btn btn-primary btn-lg">&times;</router-link>
+    </div>
   </div>
 </template>
 
 <script>
 import $ from "jquery";
+import targetServer from '../services/target-server';
+import fullscreen from '../services/fullscreen';
+
 export default {
   data () {
     return {
@@ -26,22 +33,19 @@ export default {
   },
   mounted: function () {
     this.refresh();
-    this.doFullscreen();
   },
   beforeDestroy: function() {
     console.log('clearTimeout monitor');
     if(this.refreshTimeout) clearTimeout(this.refreshTimeout);
   },
+  computed: {},
   methods: {
-    doFullscreen:function() {
-      if(document.body.parentElement.requestFullScreen) document.body.parentElement.requestFullScreen();
-      else if(document.body.parentElement.webkitRequestFullScreen) document.body.parentElement.webkitRequestFullScreen();
-      else if(document.body.parentElement.mozRequestFullScreen) document.body.parentElement.mozRequestFullScreen();
-    },
-    exitFullscreen:function() {
-      if(document.exitFullscreen) document.exitFullscreen();
-      else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-      else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
+    toggleFullscreen:function() {
+      if(fullscreen.isFullscreen()) {
+        fullscreen.exitFullscreen();
+        return;
+      }
+      fullscreen.doFullscreen();
     },
     doClose:function() {
       this.exitFullscreen();
@@ -52,12 +56,12 @@ export default {
       if(this.continueRefresh) {
         $.ajax({
           type:'GET',
-          url: this.getTargetServer()+'currentEntries',
+          url: targetServer.get()+'currentEntries',
           success:function(response) {
             that.handleResponse(response);
           },
           complete: function(jqXHR) {
-            console.log('refresh done');
+            //console.info('refresh done');
             that.refreshTimeout = setTimeout(function() {
               that.refresh();
             },1000);
@@ -66,10 +70,6 @@ export default {
       } else {
         if(that.refreshTimeout) clearTimeout(that.refreshTimeout);
       }
-    },
-    getTargetServer: function() {
-      var targetServer = window.location.href;
-      return targetServer.replace(':8080','');
     },
     handleResponse: function(response) {
       //remove not existing

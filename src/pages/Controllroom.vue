@@ -14,12 +14,18 @@
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary btn-lg viewClose" @click="doClose">Zur Übersicht</button>
+    <div class="topMenu dark">
+      <a class="btn btn-primary btn-lg" @click="toggleFullscreen()"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></a>
+      <router-link :to="{ name: 'home' }" class="btn btn-primary btn-lg viewClose">&times;</router-link>
+    </div>
   </div>
 </template>
 
 <script>
 import $ from "jquery";
+import targetServer from '../services/target-server';
+import fullscreen from '../services/fullscreen';
+
 export default {
   data : function() {
     return {
@@ -39,10 +45,16 @@ export default {
     this.refresh();
   },
   beforeDestroy: function() {
-    console.log('clearTimeout monitor');
     if(this.refreshTimeout) clearTimeout(this.refreshTimeout);
   },
   methods: {
+    toggleFullscreen:function() {
+      if(fullscreen.isFullscreen()) {
+        fullscreen.exitFullscreen();
+        return;
+      }
+      fullscreen.doFullscreen();
+    },
     isActive: function(entry) {
       var result = this.currentValues.find(function(value) {
         return (value.id===entry.id);
@@ -55,12 +67,12 @@ export default {
       if(this.continueRefresh) {
         $.ajax({
           type:'GET',
-          url: this.getTargetServer()+'currentEntries',
+          url: targetServer.get()+'currentEntries',
           success:function(response) {
             that.currentValues = response;
           },
           complete: function(jqXHR) {
-            console.log('refresh done');
+            //console.info('refresh done');
             that.refreshTimeout = setTimeout(function() {
               that.refresh();
             },500);
@@ -74,24 +86,17 @@ export default {
       if(this.isActive(v)) return;
       $.ajax({
         type:'POST',
-        url: this.getTargetServer()+'currentEntries',
+        url: targetServer.get()+'currentEntries',
         data: v,
         success:function(response) {}
       })
     },
-    getTargetServer: function() {
-      var targetServer = window.location.href;
-      return targetServer.replace(':8080','');
-    },
     removeFromCurrent: function(v) {
       $.ajax({
         type:'DELETE',
-        url: this.getTargetServer()+'currentEntries/'+v.id,
+        url: targetServer.get()+'currentEntries/'+v.id,
         success:function(response) {}
       })
-    },
-    doClose:function() {
-      this.$emit('close');
     }
   }
 };

@@ -41,7 +41,9 @@ body { font-family: Roboto, Arial, sans-serif; }
 .appOverview button { font-size: 3em; padding: .4em 1.5em; }
 .appOverview .localIp { font-size: 3em; text-align: center; margin-top:1em; }
 
-.viewClose { position: absolute; top:0; right: 0; }
+.topMenu { position: absolute; top:0; right: 0; }
+.topMenu .btn { background: transparent; opacity: .2; border:none; }
+.topMenu.dark .btn { color:#000; }
 
 .monitorView { color:#fff; position: absolute; width: 100%; height: 100%; background: #333; text-align: center; display: table-cell; vertical-align: middle; }
 .monitorView>.wrap { transform:translateY(-50%); position: absolute; top:50%; left:0; width: 100%; }
@@ -49,7 +51,6 @@ body { font-family: Roboto, Arial, sans-serif; }
 .monitorView h1 span { display: inline-block; letter-spacing: -0.08em; padding:0 .2em; }
 .monitorView h1[values="1"] { font-size: 35vh; }
 .monitorView h2 { text-transform: uppercase; font-size: 5vw; }
-.monitorView .viewClose { opacity: .2; background: transparent; border:none; }
 
 .controllroom h2 { font-size: 1.5em; }
 .controllroom { position: absolute; background: #fff; left:0; top:0; width: 100%; height: 100%; z-index: 2; }

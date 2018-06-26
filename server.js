@@ -11,6 +11,8 @@ for (var k in interfaces) {
         var address = interfaces[k][k2];
         if (address.family === 'IPv4' && !address.internal) {
             if(address.address.startsWith('192.168.178.')) localAddress = address.address;
+        } else {
+            console.log('hier',address);
         }
     }
 }

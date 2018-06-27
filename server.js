@@ -34,5 +34,5 @@ server.listen(80, () => {
 })
 
 
-const opn = require('opn');
-opn('http://localhost');
+//const opn = require('opn');
+//opn('http://localhost');

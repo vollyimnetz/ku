@@ -1,12 +1,10 @@
 <template>
     <div class="appOverview text-center">
-        <router-link :to="{ name: 'controll' }" class="btn btn-primary btn-lg">zum Kontrollraum</router-link>
-        <router-link :to="{ name: 'monitor' }" class="btn btn-primary btn-lg">zum Monitor</router-link>
+        <router-link :to="{ name: 'controll' }" class="mainBtn btn btn-primary btn-lg">zum Kontrollraum</router-link>
+        <router-link :to="{ name: 'monitor' }" class="mainBtn btn btn-primary btn-lg">zum Monitor</router-link>
         <div class="localIp">
-            Lokale IP : <span v-if="localIp!==''">{{localIp}}</span><span v-if="localIp===''">{{localIp}}</span><br />
-            <small><i>oder</i></small><br />
-            http://ku/<br />
-            <small>(Im Tablet aufrufen.)</small>
+            Lokale IP: <span v-if="localIp!==''">{{localIp}}</span><span v-if="localIp===''">{{localIp}}</span><br />
+            <small>(Im Tablet als URL aufrufen, um diese Seite angezeigt zu bekommen.)</small>
         </div>
         <div class="topMenu dark">
           <a class="btn btn-primary btn-lg" @click="toggleFullscreen()"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></a>

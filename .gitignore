@@ -12,3 +12,4 @@ yarn-error.log*
 *.sln
 
 local.db.json
+local.settings.json

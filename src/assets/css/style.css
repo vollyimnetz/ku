@@ -38,8 +38,9 @@
 body { font-family: Roboto, Arial, sans-serif; }
 
 .appOverview { margin-top:40vh; }
-.appOverview button { font-size: 3em; padding: .4em 1.5em; }
+.appOverview .mainBtn { font-size: 3em; padding: .4em 1.5em; }
 .appOverview .localIp { font-size: 3em; text-align: center; margin-top:1em; }
+.appOverview .localIp small { font-size:.5em; }
 
 .topMenu { position: absolute; top:0; right: 0; }
 .topMenu .btn { background: transparent; opacity: .2; border:none; }

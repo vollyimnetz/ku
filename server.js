@@ -1,4 +1,5 @@
 const jsonServer = require('json-server')
+
 const server = jsonServer.create();
 const router = jsonServer.router('local.db.json');
 const middlewares = jsonServer.defaults();
@@ -13,12 +14,11 @@ server.use(middlewares);
 
 // Add custom routes before JSON Server router
 server.get('/my-local-ip', (req, res) => {
-    
     res.jsonp( {result: getLocalAdress() } );
 })
 
 // Use default router
-server.use(router)
+server.use(router);
 server.listen(80, () => {
     console.log('JSON Server is running')
 })

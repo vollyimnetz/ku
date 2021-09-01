@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "Volkmar Kantor <volkmar.kantor@gmx.de>",
-  "private": true,
+  "license" : "GPL-3.0-or-later",
   "scripts": {
     "dev": "cross-env NODE_ENV=development node build/dev-server.js",
     "start": "node server.js",

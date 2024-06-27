@@ -5,20 +5,6 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig(async (process) => {
-  let userSettings = null;
-  console.log('process.mode', process.mode);
-  try {
-    //load the settings.js file
-    userSettings = (await import('./settings')).settings;
-  } catch (error) {
-    if(process.mode === 'production') {
-      userSettings = { proxyserver:'anything' }//as this is needed for build we have to define it in a way
-    } else {
-      throw new Error("\n\n"+'ACHTUNG Die settings.js Datei ist nicht korrekt gesetzt. Guck dir die settings.example.js Datei an.'+"\n\n");
-    }
-  }
-
-
   return {
     publicDir: false,
     plugins: [

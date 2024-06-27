@@ -1,52 +1,47 @@
 <template>
-    <div class="appOverview text-center">
-        <router-link :to="{ name: 'controll' }" class="mainBtn btn btn-primary btn-lg">zum Kontrollraum</router-link>
-        <router-link :to="{ name: 'monitor' }" class="mainBtn btn btn-primary btn-lg">zum Monitor</router-link>
-        <div class="localIp">
-            Lokale IP: <span v-if="localIp!==''">{{localIp}}</span><span v-if="localIp===''">{{localIp}}</span><br />
-            <small>(Im Tablet als URL aufrufen, um diese Seite angezeigt zu bekommen.)</small>
-        </div>
-        <div class="topMenu dark">
-          <a class="btn btn-primary btn-lg" @click="toggleFullscreen()"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></a>
-        </div>
+  <div class="appOverview text-center">
+    <router-link :to="{ name: 'controll' }" class="mainBtn btn btn-primary btn-lg ma-1">zum Kontrollraum</router-link>
+    <router-link :to="{ name: 'monitor' }" class="mainBtn btn btn-primary btn-lg ma-1">zum Monitor</router-link>
+    <div class="localIp">
+      Lokale IP: <span v-if="localIp!==''">{{localIp}}</span><span v-if="localIp===''">{{localIp}}</span><br />
+      <small>(Im Tablet als URL aufrufen, um diese Seite angezeigt zu bekommen.)</small>
     </div>
+    <div class="topMenu dark">
+      <a class="btn btn-primary btn-lg" @click="toggleFullscreen()"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></a>
+    </div>
+  </div>
 </template>
 
 <script>
-import $ from "jquery";
 import targetServer from '../services/target-server';
 import fullscreen from '../services/fullscreen';
 
 export default {
-  name: 'home',
   components: {},
-  mounted: function() {
+  mounted() {
     this.getLocalIp();
   },
-  data: function() {
-    return {
-      localIp: ''
-    }
-  },
+  data: () => ({
+    localIp: ''
+  }),
   methods: {
-    toggleFullscreen:function() {
+    toggleFullscreen() {
       if(fullscreen.isFullscreen()) {
         fullscreen.exitFullscreen();
         return;
       }
       fullscreen.doFullscreen();
     },
-    getLocalIp: function() {
-      var that = this;
-      $.ajax({
-          type:'GET',
-          url: targetServer.get()+'my-local-ip',
+    getLocalIp() {
+      fetch(targetServer.get()+'my-local-ip', {
+          method: 'GET',
         })
-        .done(function(response) {
-          that.localIp = response.result;
+        .then(response => response.json())
+        .then(data => {
+          this.localIp = data.result;
         })
-        .fail(function() {
-          that.localIp = '127.0.0.1';
+        .catch((error) => {
+          this.localIp = '127.0.0.1';
         });
     }
   }

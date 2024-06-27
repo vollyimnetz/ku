@@ -2,15 +2,15 @@
   <div class="controllroom">
     <h2 class="container-fluid info1">Zahl auswählen die auf dem Monitor erscheinen soll.</h2>
     <div class="numberpad">
-      <button type="button" v-for="i in allowedValues" :key="i.id" @click="addToCurrent(i)" :class="{'active':isActive(i)}">{{i.id}}</button>
+      <button type="button" v-for="i in allowedValues" :key="i.number" @click="addToCurrent(i)" :class="{'active':isNumberActive(i.number)}">{{i.number}}</button>
     </div>
 
     <div class="container-fluid currentValuesWrap">
       <h2 class="info2">Zahlen entfernen sobald die Speisen abgeholt wurden.</h2>
       <div class="currentValues">
-        <div v-for="i in currentValues" :key="i.id">
-          <button type="button" class="removeButton" @click="removeFromCurrent(i)">&times;</button>
-          {{i.id}}
+        <div v-for="entry in currentValues" :key="entry.id">
+          <button type="button" class="removeButton" @click="removeFromCurrent(entry)">&times;</button>
+          {{entry.number}}
         </div>
       </div>
     </div>
@@ -22,81 +22,79 @@
 </template>
 
 <script>
-import $ from "jquery";
 import targetServer from '../services/target-server';
 import fullscreen from '../services/fullscreen';
 
 export default {
-  data : function() {
-    return {
-      allowedValues : [
-        {id:'1'}, {id:'2'}, {id:'3'}, {id:'4'}, {id:'5'}, {id:'6'}, {id:'7'}, {id:'8'}, {id:'9'}, {id:'10'},
-        {id:'11'}, {id:'12'}, {id:'13'}, {id:'14'}, {id:'15'}, {id:'16'}, {id:'17'}, {id:'18'}, {id:'19'}, {id:'20'},
-        {id:'21'}, {id:'22'}, {id:'23'}, {id:'24'}, {id:'25'}, {id:'26'}, {id:'27'}, {id:'28'}, {id:'29'}, {id:'30'},
-        {id:'31'}, {id:'32'}, {id:'33'}, {id:'34'}, {id:'35'}, {id:'36'}, {id:'37'}, {id:'38'}, {id:'39'}, {id:'40'},
-        {id:'41'}, {id:'42'}, {id:'43'}, {id:'44'}, {id:'45'}, {id:'46'}, {id:'47'}, {id:'48'}, {id:'49'}, {id:'50'}
-      ],
-      currentValues : [],
-      continueRefresh: true,
-      refreshTimeout: null
-    }
+  data: () => ({
+    currentValues : [],
+    continueRefresh: true,
+    intervalObject: null,
+    intervalDuration: 5000,
+  }),
+  mounted() {
+    this.doSetup();
   },
-  mounted: function () {
-    this.refresh();
+  beforeDestroy() {
+    this.tearDown();
   },
-  beforeDestroy: function() {
-    if(this.refreshTimeout) clearTimeout(this.refreshTimeout);
+  computed: {
+    allowedValues() {
+      let result = [];
+      for(let i=1; i<=50; i++) {
+        result.push({number:i});
+      }
+      return result;
+    },
   },
   methods: {
-    toggleFullscreen:function() {
+    doSetup() {
+      this.intervalObject = setInterval(() => {
+          this.loadData();
+        },this.intervalDuration);
+      this.loadData();
+    },
+    tearDown() {
+      if(this.refreshTimeout) clearTimeout(this.refreshTimeout);
+    },
+    toggleFullscreen() {
       if(fullscreen.isFullscreen()) {
         fullscreen.exitFullscreen();
         return;
       }
       fullscreen.doFullscreen();
     },
-    isActive: function(entry) {
-      var result = this.currentValues.find(function(value) {
-        return (value.id===entry.id);
-      });
-
+    isNumberActive(id) {
+      let result = this.currentValues.find(value => value.number===id);
       return result!==undefined;
     },
-    refresh: function() {
-      var that = this;
-      if(this.continueRefresh) {
-        $.ajax({
-          type:'GET',
-          url: targetServer.get()+'currentEntries',
-          success:function(response) {
-            that.currentValues = response;
-          },
-          complete: function(jqXHR) {
-            //console.info('refresh done');
-            that.refreshTimeout = setTimeout(function() {
-              that.refresh();
-            },500);
-          }
+    loadData() {
+      fetch(targetServer.get()+'currentEntries', {
+          method: 'GET',
         })
-      } else {
-        if(that.refreshTimeout) clearTimeout(that.refreshTimeout);
-      }
+        .then(response => response.json())
+        .then(data => {
+          this.currentValues = data;
+        })
+        .catch((error) => {
+          console.error('error',error);
+        });
     },
-    addToCurrent: function(v) {
-      if(this.isActive(v)) return;
-      $.ajax({
-        type:'POST',
-        url: targetServer.get()+'currentEntries',
-        data: v,
-        success:function(response) {}
-      })
+    async addToCurrent(theEntry) {
+      if(this.isNumberActive(theEntry.number)) return;
+
+      await fetch(targetServer.get()+'currentEntries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ number: theEntry.number }),
+        });
+      this.loadData();
     },
-    removeFromCurrent: function(v) {
-      $.ajax({
-        type:'DELETE',
-        url: targetServer.get()+'currentEntries/'+v.id,
-        success:function(response) {}
-      })
+    async removeFromCurrent(theEntry) {
+      await fetch(targetServer.get()+'currentEntries/'+theEntry.id, {
+          method: 'DELETE'
+        });
+      this.loadData();
     }
   }
 };

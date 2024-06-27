@@ -4,7 +4,7 @@
 
     <div class="links">
       <router-link :to="'/'">
-        {{ $t('go_home') }}
+        Zur Startseite
       </router-link>
     </div>
   </card>

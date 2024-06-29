@@ -1,7 +1,7 @@
-import Home from '@/pages/Home.vue';
-import Monitor from '@/pages/Monitor.vue';
-import Controllroom from '@/pages/Controllroom.vue';
-import Page404 from '@/pages/404.vue';
+import Home from '@/components/Home.vue';
+import Monitor from '@/components/Monitor.vue';
+import Controllroom from '@/components/Controllroom.vue';
+import Page404 from '@/components/404.vue';
 
 
 export default [

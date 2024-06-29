@@ -5,12 +5,16 @@
       <router-link :to="{ name: 'monitor' }" class="button">zum Monitor</router-link>
     </div>
     <div class="localIp">
-      Lokale IP: <span v-if="localIp!==''">{{localIp}}</span><span v-if="localIp===''">{{localIp}}</span>
-      <button @click="changeIp" class="editButton">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>pencil</title><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>
-      </button>
+      <small>Lokale IP</small>
+      <div><span class="localIpInner">{{localIp}}</span>
+        <button @click="changeIp" class="editButton">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>pencil</title><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>
+        </button>
+      </div>
       <br />
-      <small>(Im Tablet als URL aufrufen, um diese Seite angezeigt zu bekommen.)</small>
+      <div class="infoText">
+        Im Browser des Tablets die lokale IP als URL eingeben, um diese Seite angezeigt zu bekommen. (Das Tablet muss dabei im gleichen Netzwerk sein).
+      </div>
     </div>
     <div class="topMenu dark">
       <a class="btn btn-primary btn-lg" @click="toggleFullscreen()"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></a>
@@ -79,11 +83,12 @@ export default {
 
 <style lang="scss">
 .appOverview { margin-top:30vh;
-  .areas { display: flex; justify-content: center; gap: .3em; }
+  .areas { display: flex; justify-content: center; gap: .3em; flex-direction: row; flex-wrap: wrap; }
 }
-.appOverview .mainBtn { font-size: 2em; padding: .4em 1.5em;margin-bottom:3px; }
 .appOverview .localIp { font-size: 2em; text-align: center; margin-top:1em; }
+.appOverview .localIpInner { display: inline-block; margin-left:1.5em; }
 .appOverview .localIp small { font-size:.5em; display: inline-block; }
+.appOverview .infoText { font-size:.5em; margin-top:1em; padding: 0 1em; line-height: 1.5;}
 
 .editButton { background: transparent; border:none; padding: 5px; line-height: 20px; margin-left:1em; display: inline-block; color: #aaa;
   svg { width: 20px; height: 20px; }

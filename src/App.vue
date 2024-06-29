@@ -22,7 +22,7 @@ svg { width: 1em; height: 1em; }
 
 }
 
-.button { background-color: rgba(var(--colorMain), 1); border-radius: .3em; color:#fff; display: inline-block; text-decoration: none; padding: 1em 2em; font-size: 2em; border: 0; transition: background-color .5s ease;
+.button { background-color: rgba(var(--colorMain), 1); border-radius: .3em; color:#fff; display: inline-block; text-decoration: none; padding: 1em 1.5em; font-size: 1.5em; border: 0; transition: background-color .5s ease;
   &:hover { background-color: rgba(var(--colorMain), .9); }
 }
 </style>

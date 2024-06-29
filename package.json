@@ -14,8 +14,6 @@
     "run-json": "json-server --watch local.db.json --port 80"
   },
   "dependencies": {
-    "address": "^2.0.3",
-    "bootstrap": "^5.3.3",
     "json-server": "^0.17.4",
     "vue": "^3.4.30",
     "vue-router": "^4.4.0"

@@ -1,22 +1,28 @@
 <template>
   <div class="controllroom">
-    <h2 class="container-fluid info1">Zahl auswählen die auf dem Monitor erscheinen soll.</h2>
-    <div class="numberpad">
-      <button type="button" v-for="i in allowedValues" :key="i.number" @click="addToCurrent(i)" :class="{'active':isNumberActive(i.number)}">{{i.number}}</button>
-    </div>
-
-    <div class="container-fluid currentValuesWrap">
-      <h2 class="info2">Zahlen entfernen sobald die Speisen abgeholt wurden.</h2>
-      <div class="currentValues">
-        <div v-for="entry in currentValues" :key="entry.id">
-          <button type="button" class="removeButton" @click="removeFromCurrent(entry)">&times;</button>
-          {{entry.number}}
-        </div>
+    <section class="numberpadWrap">
+      <h2>In Bearbeitung:</h2>
+      <div class="numberpad">
+        <button type="button" v-for="i in allowedValues" :key="i.number" @click="addToCurrent(i)" :class="{'active':isNumberActive(i.number)}">{{i.number}}</button>
       </div>
-    </div>
+    </section>
+
+    <section class="currentValuesWrap">
+      <h2>Bereit zum Abholen:</h2>
+      <div class="currentValues">
+        <button v-for="entry in currentValues" :key="entry.id" @click="removeFromCurrent(entry)">
+          {{entry.number}}
+        </button>
+      </div>
+    </section>
+
     <div class="topMenu dark">
-      <a class="btn btn-primary btn-lg" @click="toggleFullscreen()"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></a>
-      <router-link :to="{ name: 'home' }" class="btn btn-primary btn-lg viewClose">&times;</router-link>
+      <a class="button viewFullsize" @click="toggleFullscreen()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>resize</title><path d="M10.59,12L14.59,8H11V6H18V13H16V9.41L12,13.41V16H20V4H8V12H10.59M22,2V18H12V22H2V12H6V2H22M10,14H4V20H10V14Z" /></svg>
+      </a>
+      <router-link :to="{ name: 'home' }" class="button viewClose">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>close</title><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
+      </router-link>
     </div>
   </div>
 </template>
@@ -31,6 +37,7 @@ export default {
     continueRefresh: true,
     intervalObject: null,
     intervalDuration: 5000,
+    maxNumber: 48,
   }),
   mounted() {
     this.doSetup();
@@ -41,7 +48,7 @@ export default {
   computed: {
     allowedValues() {
       let result = [];
-      for(let i=1; i<=50; i++) {
+      for(let i=1; i<=48; i++) {
         result.push({number:i});
       }
       return result;
@@ -99,3 +106,54 @@ export default {
   }
 };
 </script>
+
+
+<style lang="scss">
+.controllroom { position: absolute; background: #fff; left:0; top:0; width: 100%; height: 100%; z-index: 2;
+  --totalEntries:48;
+  --entriesPerRow:5;
+
+  --gapWidth:5px;
+  --fontSize: 6vw;
+  --borderRadius:.1em;
+  @media (min-aspect-ratio: 1/3) {
+    --entriesPerRow:5;
+  }
+
+  @media (min-aspect-ratio: 1/2) {
+    --entriesPerRow:8;
+    --fontSize: 8vw;
+  }
+
+  @media (min-aspect-ratio: 3/2) {
+    --entriesPerRow:12;
+    --fontSize: 3vw;
+  }
+
+  @media(max-width: 600px) {
+    --fontSizeHeadline: 20px;
+  }
+
+  .numberpadWrap { padding: var(--gapWidth); display: flex; flex-direction: column; height: 75vh;
+    h2 { font-size:var(--fontSizeHeadline); font-weight: normal; margin:0; color: #aaa; margin-bottom: .5em; }
+
+    .numberpad { display:flex; flex-wrap:wrap; gap: var(--gapWidth); flex-grow: 1;
+      &>button { width: calc((100% / var(--entriesPerRow)) - (var(--gapWidth) - var(--gapWidth) / var(--entriesPerRow))); text-align: center; line-height: 1; padding:0; background: #f0f0f0; display: block; border:none; border-radius:var(--borderRadius); font-size: var(--fontSize); overflow: hidden;}
+      &>button.active { background: red; color:#fff; }
+    }
+  }
+
+  .currentValuesWrap { padding: var(--gapWidth); display: flex; flex-direction: column; height: 25vh; background: rgba(var(--colorGreen),0.3);
+    --colorGreen: 0, 144, 0;
+    h2 { font-size:var(--fontSizeHeadline); font-weight: normal; margin:0; color: #aaa; margin-bottom: .5em; color: rgba(var(--colorGreen),1); }
+    .currentValues { display:flex; flex-wrap:wrap; gap: var(--gapWidth); flex-grow: 1;
+      &>button { width: calc((100% / var(--entriesPerRow)) - (var(--gapWidth) - var(--gapWidth) / var(--entriesPerRow))); text-align: center; line-height: 1; padding:0; background: #fff; display: block; border:none; border-radius:var(--borderRadius); font-size: var(--fontSize); }
+    }
+  }
+  button.removeButton { position: absolute; top: -10%; right: -10%; background: #999; padding: 2%; font-size: 45%; line-height: 45%; border: 0; width: 45%; height: 45%; color: #fff }
+}
+
+
+
+
+</style>

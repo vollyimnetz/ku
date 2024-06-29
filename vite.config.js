@@ -33,6 +33,11 @@ export default defineConfig(async (process) => {
       APP_VERSION_DATE: JSON.stringify(new Date()),
       __VUE_PROD_DEVTOOLS__: process.mode === 'development' ? true : false,
     },
+
+    server: {
+      port: 8080,
+      open: true
+    }
     //base: command === 'serve' ? '' : '/app/',
   };
 });

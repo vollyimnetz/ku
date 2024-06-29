@@ -1,14 +1,14 @@
 <template>
   <div class="controllroom">
     <section class="numberpadWrap">
-      <h2>Markiere welche Bestellungen fertig sind:</h2>
+      <h2>Markiere fertige Bestellungen</h2>
       <div class="numberpad">
         <button type="button" v-for="i in allowedValues" :key="i.number" @click="addToCurrent(i)" :class="{'active':isNumberActive(i.number)}">{{i.number}}</button>
       </div>
     </section>
 
     <section class="currentValuesWrap">
-      <h2>Bereit zum Abholen - klicken zum Löschen</h2>
+      <h2>Bereit zum Abholen</h2>
       <div class="currentValues">
         <button v-for="entry in currentValues" :key="entry.id" @click="removeFromCurrent(entry)">
           {{entry.number}}

@@ -4,8 +4,8 @@
       <div class="wrap" v-if="currentValues.length>0">
         <h2>Bitte abholen</h2>
         <h1 :values="currentValues.length">
-          <transition-group name="numberAnimated">
-            <span v-for="i in currentValues" :key="i">{{i.number}}</span>
+          <transition-group name="numberAnimated" tag="span">
+            <span v-for="i in currentValues" :key="i.id">{{i.number}}</span>
           </transition-group>
         </h1>
       </div>
@@ -25,7 +25,6 @@
 <script>
 import targetServer from '../services/target-server';
 import fullscreen from '../services/fullscreen';
-
 export default {
   data () {
     return {
@@ -37,12 +36,14 @@ export default {
   mounted() {
     this.doSetup();
   },
-  beforeDestroy() {
-    console.log('clearTimeout monitor');
-    if(this.refreshTimeout) clearTimeout(this.refreshTimeout);
+  beforeUnmount() {
+    this.tearDown();
   },
-  computed: {},
   methods: {
+    tearDown() {
+      console.log('clearInterval monitor');
+      if(this.intervalObject) clearInterval(this.intervalObject);
+    },
     doSetup() {
       this.intervalObject = setInterval(() => {
           this.loadData();
@@ -66,25 +67,8 @@ export default {
       })
       .then(response => response.json())
       .then(data => {
-          this.handleResponse(data);
-        });
-    },
-    handleResponse(response) {
-      //remove not existing
-      for(var i = 0; i < this.currentValues.length; i++) {
-        var current = this.currentValues[i];
-        if(response.find(value => value.id===current.id) === undefined) {
-          this.currentValues.splice(i, 1);
-        }
-      }
-
-      //add new
-      for (var i = 0; i < response.length; i++) {
-        var current = response[i];
-        if(this.currentValues.find(value => value.id===current.id)===undefined) {
-          this.currentValues.push(current);
-        }
-      }
+        this.currentValues = data;
+      });
     }
   }
 }
@@ -93,23 +77,39 @@ export default {
 <style lang="scss">
 .monitorView { color:#fff; position: absolute; width: 100%; height: 100%; background: #000; text-align: center; display: table-cell; vertical-align: middle;
   &>.wrap { transform:translateY(-50%); position: absolute; top:50%; left:0; width: 100%; }
-  h1 { color:#fff; font-size: 23vh; font-weight: bold; }
   h1 span { display: inline-block; letter-spacing: -0.08em; padding:0 .2em; }
+  h1 { color:#fff; font-size: 23vh; font-weight: bold; transition: font-size .4s ease; }
   h1[values="1"] { font-size: 35vh; }
   h2 { text-transform: uppercase; font-size: 5vw; }
 
   .topMenu { color: #fff; }
 
-  .numberAnimated-item { display: inline-block; margin-right: 10px; }
-  .numberAnimated-enter,
-  .numberAnimated-enter-to { animation-name: numberAnimation; animation-timing-function: ease-in-out; animation-duration: .7s; }
-  .numberAnimated-leave-to { animation-name: numberAnimation; animation-timing-function: ease-in-out; animation-direction:reverse; animation-duration: .7s; }
+  /**
+  .numberAnimated-enter-from
+  .numberAnimated-enter-active
+  .numberAnimated-enter-to
+
+  .numberAnimated-leave-from
+  .numberAnimated-leave-active
+  .numberAnimated-leave-to
+  */
+
+  .numberAnimated-enter-from { opacity: 0; font-size:0; }
+  .numberAnimated-enter-active { animation-name: numberAnimation; animation-timing-function: ease-in-out; animation-duration: .7s; }
+  .numberAnimated-enter-to { opacity: 1; font-size:1em; }
+
+  .numberAnimated-leave-from { opacity: 1; font-size:1em; }
+  .numberAnimated-leave-active { animation-name: numberAnimation; animation-timing-function: ease-in-out; animation-direction:reverse; animation-duration: .7s; }
+  .numberAnimated-leave-to { opacity: 0; font-size:0; }
 
 
-  .wrapAnimated-item { display: inline-block; margin-right: 10px; }
-  .wrapAnimated-enter,
-  .wrapAnimated-enter-to { animation-name: wrapAnimation; animation-timing-function: ease-in-out; animation-duration: .4s; }
-  .wrapAnimated-leave-to { animation-name: wrapAnimation; animation-timing-function: ease-in-out; animation-direction:reverse; animation-duration: .4s; }
+  .wrapAnimated-enter-from { opacity: 0; font-size:0; }
+  .wrapAnimated-enter-active { animation-name: wrapAnimation; animation-timing-function: ease-in-out; animation-duration: .4s; }
+  .wrapAnimated-enter-to { opacity: 1; font-size:1em; }
+
+  .wrapAnimated-leave-from { opacity: 1; font-size:1em; }
+  .wrapAnimated-leave-active { animation-name: wrapAnimation; animation-timing-function: ease-in-out; animation-direction:reverse; animation-duration: .4s; }
+  .wrapAnimated-leave-to { opacity: 0; font-size:0; }
 }
 
 @keyframes wrapAnimation {

@@ -42,7 +42,7 @@ export default {
   mounted() {
     this.doSetup();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.tearDown();
   },
   computed: {
@@ -62,7 +62,8 @@ export default {
       this.loadData();
     },
     tearDown() {
-      if(this.refreshTimeout) clearTimeout(this.refreshTimeout);
+      console.log('clearInterval controllroom');
+      if(this.intervalObject) clearInterval(this.intervalObject);
     },
     toggleFullscreen() {
       if(fullscreen.isFullscreen()) {
@@ -111,18 +112,18 @@ export default {
 <style lang="scss">
 .controllroom { position: absolute; background: #fff; left:0; top:0; width: 100%; height: 100%; z-index: 2;
   --totalEntries:48;
-  --entriesPerRow:5;
+  --entriesPerRow:6;
 
   --gapWidth:5px;
   --fontSize: 6vw;
   --borderRadius:.1em;
   @media (min-aspect-ratio: 1/3) {
-    --entriesPerRow:5;
+    --entriesPerRow:6;
   }
 
   @media (min-aspect-ratio: 1/2) {
     --entriesPerRow:8;
-    --fontSize: 8vw;
+    --fontSize: 6vw;
   }
 
   @media (min-aspect-ratio: 3/2) {

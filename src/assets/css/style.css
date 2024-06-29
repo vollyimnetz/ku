@@ -1,10 +1,10 @@
-/*
-@import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-/*/
+/* basic reset */
 *, ::after, ::before {
   box-sizing: border-box;
 }
+
+
 /*//
 /* fira-sans-regular - latin */
 @font-face {
